@@ -5,6 +5,7 @@ import path from 'path'
 import sveltePreprocess from 'svelte-preprocess'
 import zipPack from 'vite-plugin-zip-pack'
 import manifest from './src/manifest'
+import postcss from './postcss.config.mjs'
 
 export default defineConfig(({ mode }) => {
   const production = mode === 'production'
@@ -36,6 +37,9 @@ export default defineConfig(({ mode }) => {
         }.zip`,
       }),
     ],
+    css: {
+      postcss,
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),

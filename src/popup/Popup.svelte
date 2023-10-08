@@ -1,5 +1,6 @@
 <script lang="ts">
   import FilterButton from '@components/FilterButton.svelte'
+  import '../tailwind.css'
 
   const crx = 'create-chrome-ext'
   const value = 'chrome-local-storage'
@@ -13,8 +14,8 @@
   let name = 'world'
 </script>
 
-<main>
-  <h3 class="bg-pink p-4">Popup Page!</h3>
+<main class="bg-slate-50">
+  <h3 class="p-4">Popup Page!</h3>
 
   <h6>v 0.0.0</h6>
   <ul>

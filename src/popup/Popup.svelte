@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SetupInput from '@/components/SetInput.svelte'
+  import Form from '@/components/Form.svelte'
   import '../tailwind.css'
 
   const crx = 'create-chrome-ext'
@@ -14,7 +14,7 @@
 </script>
 
 <main class="bg-slate-400">
-  <SetupInput />
+  <Form />
 </main>
 
 <style>

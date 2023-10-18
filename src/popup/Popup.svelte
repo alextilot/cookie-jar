@@ -1,6 +1,21 @@
 <script lang="ts">
   import Form from '@/components/Form.svelte'
   import '../tailwind.css'
+  ;(async function () {
+    console.log('Query for local storage')
+    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+    if (!tab.id) return
+    // Execute script in the current tab
+    const fromPageLocalStore = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        return JSON.stringify(localStorage)
+      },
+    })
+    console.log({ tab, fromPageLocalStore })
+    const localStorageItems = JSON.parse(fromPageLocalStore[0].result)
+    console.log('localStorage', localStorageItems)
+  })()
 
   const crx = 'create-chrome-ext'
   const value = 'chrome-local-storage'

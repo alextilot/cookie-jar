@@ -1,33 +1,40 @@
 <script lang="ts">
+  import { action } from '@/appStorage'
   import ItemInput from '@/components/ItemInput.svelte'
 
-  function build(obj: any, keys: string[], value: any) {
-    console.log({ obj, keys, value })
-    const next = keys.shift() as string
-    //need to check if prop exists! duh
-    if (keys.length === 0) {
-      obj[next] = value
-      return obj
+  function buildNestObj(obj: any, keys: string[], value: any) {
+    let pointer = obj
+    let i = 0
+    for (; i < keys.length - 1; i++) {
+      const key = keys[i]
+      if (!(key in pointer)) {
+        pointer[key] = {}
+      }
+      pointer = pointer[key]
     }
-
-    if (keys.length === 1) {
-      obj[next] = { [keys[0]]: value }
-      return obj
-    }
-
-    obj[next] = {}
-
-    return build(obj.next, keys, value)
+    pointer[keys[i]] = value
+    return obj
   }
+
   function handleSubmit(e: any) {
     const formData = new FormData(e.target)
 
-    const data: any = {}
+    let data: any = {}
     for (const field of formData) {
       const [keys, value] = field
-      build(data, keys.split('.'), value)
+      data = buildNestObj(data, keys.split('.'), value)
     }
     console.log(data)
+    for (const key of Object.keys(data)) {
+      console.log(data[key])
+      const item = {
+        type: data[key].storage,
+        action: data[key].action,
+        key: data[key].key,
+        value: data[key].value,
+      }
+      action(item)
+    }
   }
 </script>
 

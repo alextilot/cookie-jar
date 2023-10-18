@@ -2,8 +2,13 @@ export interface Item {
   key: string
   value: string
 }
+
 export type StorageType = 'cookie' | 'local' | 'session'
+export const StorageTypeList = ['cookie', 'local', 'session'] as const
+
 export type StorageAction = 'set' | 'get' | 'remove'
+export const StorageActionList = ['set', 'get', 'remove'] as const
+
 export interface StorageItem extends Item {
   type: StorageType
   action: StorageAction

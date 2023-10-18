@@ -1,57 +1,27 @@
 <script lang="ts">
-  interface Option {
-    id: number
-    text: string
-  }
-  const storages: Option[] = [
-    {
-      id: 1,
-      text: 'cookie',
-    },
-    {
-      id: 2,
-      text: 'local',
-    },
-    {
-      id: 3,
-      text: 'session',
-    },
-  ]
-  const actions: Option[] = [
-    {
-      id: 1,
-      text: 'get',
-    },
-    {
-      id: 2,
-      text: 'set',
-    },
-    {
-      id: 3,
-      text: 'remove',
-    },
-  ]
+  import { StorageAction, StorageActionList, StorageType, StorageTypeList } from '@/appStorage'
   export let name: string
 
-  let storage: string | null
-  let action: string | null
-
+  let storage: StorageType | null
+  let action: StorageAction | null
+  let apply = false
   let key = ''
   let value = ''
 </script>
 
 <div class="flex w-full gap-1">
+  <input name={`${name}.apply`} type="checkbox" checked bind:value={apply} />
   <select name={`${name}.action`} bind:value={action}>
-    {#each actions as opt}
-      <option value={opt.text}>
-        {opt.text}
+    {#each StorageActionList as opt}
+      <option value={opt}>
+        {opt}
       </option>
     {/each}
   </select>
   <select name={`${name}.storage`} bind:value={storage}>
-    {#each storages as opt}
-      <option value={opt.text}>
-        {opt.text}
+    {#each StorageTypeList as opt}
+      <option value={opt}>
+        {opt}
       </option>
     {/each}
   </select>

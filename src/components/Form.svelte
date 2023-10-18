@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { action } from '@/appStorage'
+  import { sendMessageActiveTab } from '@/chromeAPI'
   import ItemInput from '@/components/ItemInput.svelte'
 
   function buildNestObj(obj: any, keys: string[], value: any) {
@@ -24,16 +24,15 @@
       const [keys, value] = field
       data = buildNestObj(data, keys.split('.'), value)
     }
-    console.log(data)
+
     for (const key of Object.keys(data)) {
-      console.log(data[key])
       const item = {
         type: data[key].storage,
         action: data[key].action,
         key: data[key].key,
         value: data[key].value,
       }
-      action(item)
+      sendMessageActiveTab({ id: 'storage-action', data: item }).then((data) => console.log(data))
     }
   }
 </script>

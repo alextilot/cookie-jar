@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { StorageAction, StorageActionList, StorageType, StorageTypeList } from '@/appStorage'
+  import { StorageAction, StorageActionList, StorageType, StorageTypeList } from '@/clientStorage'
   export let name: string
 
   let storage: StorageType | null

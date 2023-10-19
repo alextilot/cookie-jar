@@ -14,13 +14,13 @@ export interface StorageItem extends Item {
   action: StorageAction
 }
 
-interface AppStorage {
+interface ClientStorage {
   set(item: Item): void
   get(item: Item): string | null
   remove(item: Item): void
 }
 
-const Cookie: AppStorage = {
+const Cookie: ClientStorage = {
   set(item: Item) {
     document.cookie = `${item.key}=${item.value};path=/`
   },
@@ -43,7 +43,7 @@ const Cookie: AppStorage = {
   },
 }
 
-const Local: AppStorage = {
+const Local: ClientStorage = {
   set(item: Item) {
     localStorage.setItem(item.key, item.value)
   },
@@ -55,7 +55,7 @@ const Local: AppStorage = {
   },
 }
 
-const Session: AppStorage = {
+const Session: ClientStorage = {
   set(item: Item) {
     sessionStorage.setItem(item.key, item.value)
   },

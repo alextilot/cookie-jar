@@ -1,4 +1,4 @@
-export interface Request {
+export interface ChromeRequest {
   id: string
   data?: any
 }
@@ -10,7 +10,7 @@ export async function getCurrentTab() {
   return tab
 }
 
-export async function sendMessageActiveTab(message: Request) {
+export async function sendMessageActiveTab(message: ChromeRequest) {
   const tab = await getCurrentTab()
   console.log(tab)
   // if (!tab.id) return

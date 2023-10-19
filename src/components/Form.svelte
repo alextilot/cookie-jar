@@ -2,6 +2,21 @@
   import { sendMessageActiveTab } from '@/chromeAPI'
   import ItemInput from '@/components/ItemInput.svelte'
 
+  let fields: any[] = []
+
+  chrome.storage.local.get(['state']).then((result) => {
+    const obj = result.state
+    for (const key of Object.keys(obj)) {
+      const item = {
+        type: obj[key].storage,
+        action: obj[key].action,
+        key: obj[key].key,
+        value: obj[key].value,
+      }
+      fields.push(item)
+    }
+  })
+
   function buildNestObj(obj: any, keys: string[], value: any) {
     let pointer = obj
     let i = 0
@@ -25,21 +40,27 @@
       data = buildNestObj(data, keys.split('.'), value)
     }
 
-    for (const key of Object.keys(data)) {
-      const item = {
-        type: data[key].storage,
-        action: data[key].action,
-        key: data[key].key,
-        value: data[key].value,
-      }
-      sendMessageActiveTab({ id: 'storage-action', data: item }).then((data) => console.log(data))
-    }
+    // for (const key of Object.keys(data)) {
+    //   const item = {
+    //     type: data[key].storage,
+    //     action: data[key].action,
+    //     key: data[key].key,
+    //     value: data[key].value,
+    //   }
+    //   // sendMessageActiveTab({ id: 'storage-action', data: item }).then((data) => console.log(data))
+    // }
+    chrome.storage.local.set({ state: data })
   }
 </script>
 
 <h2>Storage</h2>
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-2">
-  <ItemInput name={'1'} />
+  {#key fields}
+    {#each fields as input, index}
+      <ItemInput name={index.toString()} />
+    {/each}
+    <ItemInput name={fields.length.toString()} />
+  {/key}
   <button class="rounded-lg px-2 text-center font-semibold uppercase bg-blue-400" type="submit"
     >Apply</button
   >

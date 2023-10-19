@@ -2,11 +2,11 @@
   import { StorageAction, StorageActionList, StorageType, StorageTypeList } from '@/clientStorage'
   export let name: string
 
-  let storage: StorageType | null
-  let action: StorageAction | null
-  let apply = false
-  let key = ''
-  let value = ''
+  export let storage: StorageType | null = 'cookie'
+  export let action: StorageAction | null = 'set'
+  export let apply = false
+  export let key = ''
+  export let value = ''
 </script>
 
 <div class="flex w-full gap-1">

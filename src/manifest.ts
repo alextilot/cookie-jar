@@ -1,19 +1,15 @@
 import { defineManifest } from '@crxjs/vite-plugin'
+import { ICON_COOKIE_JAR_EMPTY, ICON_COOKIE_JAR_FULL } from './config/settings'
 
 export default defineManifest({
-  name: 'create-chrome-ext',
+  name: 'CookieJar',
   description: '',
   version: '0.0.0',
   manifest_version: 3,
-  icons: {
-    '16': 'img/logo-16.png',
-    '32': 'img/logo-34.png',
-    '48': 'img/logo-48.png',
-    '128': 'img/logo-128.png',
-  },
+  icons: ICON_COOKIE_JAR_EMPTY,
   action: {
     default_popup: 'popup.html',
-    default_icon: 'img/logo-48.png',
+    default_icon: ICON_COOKIE_JAR_FULL,
   },
   options_page: 'options.html',
   background: {
@@ -31,7 +27,7 @@ export default defineManifest({
   },
   web_accessible_resources: [
     {
-      resources: ['img/logo-16.png', 'img/logo-34.png', 'img/logo-48.png', 'img/logo-128.png'],
+      resources: ['img/cookiejar-full.png', 'img/cookiejar-empty.png'],
       matches: [],
     },
   ],

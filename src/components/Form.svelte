@@ -1,23 +1,19 @@
 <script lang="ts">
-  import { sendMessageActiveTab } from '@/chromeAPI'
   import ItemInput from '@/components/ItemInput.svelte'
+  import { KEY_APP_STORAGE } from '@/api/chrome'
 
   let fields: any[] = []
 
-  chrome.storage.local.get(['state']).then((result) => {
-    const obj = result.state
-    for (const key of Object.keys(obj)) {
-      const item = {
-        type: obj[key].storage,
-        action: obj[key].action,
-        key: obj[key].key,
-        value: obj[key].value,
-      }
-      fields.push(item)
-    }
+  function updateFields(obj: any) {
+    fields = Object.keys(obj).map((key) => obj[key])
+  }
+
+  chrome.storage.local.get([KEY_APP_STORAGE]).then((result) => {
+    const obj = result[KEY_APP_STORAGE]
+    updateFields(obj)
   })
 
-  function buildNestObj(obj: any, keys: string[], value: any) {
+  function buildObject(obj: any, keys: string[], value: any) {
     let pointer = obj
     let i = 0
     for (; i < keys.length - 1; i++) {
@@ -33,35 +29,36 @@
 
   function handleSubmit(e: any) {
     const formData = new FormData(e.target)
-
     let data: any = {}
     for (const field of formData) {
       const [keys, value] = field
-      data = buildNestObj(data, keys.split('.'), value)
+      data = buildObject(data, keys.split('.'), value)
     }
-
-    // for (const key of Object.keys(data)) {
-    //   const item = {
-    //     type: data[key].storage,
-    //     action: data[key].action,
-    //     key: data[key].key,
-    //     value: data[key].value,
-    //   }
-    //   // sendMessageActiveTab({ id: 'storage-action', data: item }).then((data) => console.log(data))
-    // }
-    chrome.storage.local.set({ state: data })
+    //Remove empty keys
+    for (const key of Object.keys(data)) {
+      if (!data[key].key) {
+        delete data[key]
+      }
+    }
+    chrome.storage.local.set({ [KEY_APP_STORAGE]: data })
+    updateFields(data)
   }
 </script>
 
 <h2>Storage</h2>
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-2">
   {#key fields}
-    {#each fields as input, index}
-      <ItemInput name={index.toString()} />
+    {#each fields as entry, index}
+      <ItemInput
+        name={index.toString()}
+        apply={entry.apply}
+        action={entry.action}
+        storage={entry.storage}
+        key={entry.key}
+        value={entry.value}
+      />
     {/each}
     <ItemInput name={fields.length.toString()} />
   {/key}
-  <button class="rounded-lg px-2 text-center font-semibold uppercase bg-blue-400" type="submit"
-    >Apply</button
-  >
+  <button class="btn btn-primary" type="submit">Save</button>
 </form>

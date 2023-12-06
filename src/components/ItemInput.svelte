@@ -2,15 +2,15 @@
   import { StorageAction, StorageActionList, StorageType, StorageTypeList } from '@/clientStorage'
   export let name: string
 
-  export let storage: StorageType | null = 'cookie'
-  export let action: StorageAction | null = 'set'
   export let apply = false
+  export let action: StorageAction | null = 'set'
+  export let storage: StorageType | null = 'cookie'
   export let key = ''
   export let value = ''
 </script>
 
 <div class="flex w-full gap-1">
-  <input name={`${name}.apply`} type="checkbox" checked bind:value={apply} />
+  <input name={`${name}.apply`} type="checkbox" bind:checked={apply} />
   <select name={`${name}.action`} bind:value={action}>
     {#each StorageActionList as opt}
       <option value={opt}>

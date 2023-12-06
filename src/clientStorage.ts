@@ -10,14 +10,22 @@ export type StorageAction = 'set' | 'get' | 'remove'
 export const StorageActionList = ['set', 'get', 'remove'] as const
 
 export interface StorageItem extends Item {
-  type: StorageType
+  storage: StorageType
   action: StorageAction
 }
 
+export interface StorageCommand extends StorageItem {
+  apply?: 'on'
+}
+
+export interface StorageCommandResponse extends StorageCommand {
+  info?: string | null
+}
+
 interface ClientStorage {
-  set(item: Item): void
+  set(item: Item): undefined
   get(item: Item): string | null
-  remove(item: Item): void
+  remove(item: Item): undefined
 }
 
 const Cookie: ClientStorage = {
@@ -72,7 +80,7 @@ function assertUnreachable(x: never): never {
 }
 
 function storageStrategy(item: StorageItem) {
-  switch (item.type) {
+  switch (item.storage) {
     case 'cookie':
       return Cookie
     case 'local':
@@ -80,18 +88,20 @@ function storageStrategy(item: StorageItem) {
     case 'session':
       return Session
   }
-  return assertUnreachable(item.type)
+  return assertUnreachable(item.storage)
 }
 
-export function action(item: StorageItem) {
+export function handleRequest(item: StorageCommand): StorageCommandResponse {
+  if (!item.apply) return { ...item, info: undefined }
+
   const storage = storageStrategy(item)
   switch (item.action) {
     case 'set':
-      return storage.set(item)
+      return { ...item, info: storage.set(item) }
     case 'get':
-      return storage.get(item)
+      return { ...item, info: storage.get(item) }
     case 'remove':
-      return storage.remove(item)
+      return { ...item, info: storage.remove(item) }
   }
   return assertUnreachable(item.action)
 }

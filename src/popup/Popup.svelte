@@ -1,34 +1,34 @@
 <script lang="ts">
+  import '../style/tailwind.css'
   import Form from '@/components/Form.svelte'
-  import '../tailwind.css'
-  // ;(async function () {
-  //   console.log('Query for local storage')
-  //   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-  //   if (!tab.id) return
-  //   // Execute script in the current tab
-  //   const fromPageLocalStore = await chrome.scripting.executeScript({
-  //     target: { tabId: tab.id },
-  //     func: () => {
-  //       return JSON.stringify(localStorage)
-  //     },
-  //   })
-  //   console.log({ tab, fromPageLocalStore })
-  //   const localStorageItems = JSON.parse(fromPageLocalStore[0].result)
-  //   console.log('localStorage', localStorageItems)
-  // })()
+  import { KEY_CONFIG } from '@/api/chrome'
 
-  const crx = 'create-chrome-ext'
-  const value = 'chrome-local-storage'
-  chrome.storage.local.set({ key: value }).then(() => {
-    console.log('Value is set')
+  let isActive = false
+
+  chrome.storage.local.get([KEY_CONFIG]).then((result) => {
+    isActive = result[KEY_CONFIG]?.isActive
   })
 
-  chrome.storage.local.get(['key']).then((result) => {
-    console.log('Value currently is ' + result.key)
-  })
+  function handleToggle() {
+    isActive = !isActive
+    chrome.storage.local.get([KEY_CONFIG]).then((result) => {
+      const data = { ...result[KEY_CONFIG], isActive: isActive }
+      chrome.storage.local.set({ [KEY_CONFIG]: data })
+    })
+  }
 </script>
 
 <main class="bg-slate-400">
+  <button
+    class={`btn ${isActive ? 'btn-primary' : 'btn-secondary'}`}
+    on:click={() => handleToggle()}
+  >
+    {#if isActive}
+      On
+    {:else}
+      Off
+    {/if}
+  </button>
   <Form />
 </main>
 

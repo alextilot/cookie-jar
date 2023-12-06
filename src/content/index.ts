@@ -1,10 +1,12 @@
 console.info('chrome-ext template-svelte-ts content script')
-import { action } from '@/clientStorage'
-import { ChromeRequest } from '@/chromeAPI'
+import { handleRequest } from '@/clientStorage'
+import { ChromeRequest } from '@/api/chrome'
 
 chrome.runtime.onMessage.addListener((request: ChromeRequest, sender, sendResponse) => {
-  if (request.id === 'storage-action') {
-    sendResponse(action(request.data))
+  if (request.id === 'client-storage-command') {
+    const response = handleRequest(request.data)
+    console.log('Client Storage', { response })
+    sendResponse(response)
   }
 })
 

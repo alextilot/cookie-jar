@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite'
 import { crx } from '@crxjs/vite-plugin'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
-import path from 'path'
+import * as path from 'path'
 import sveltePreprocess from 'svelte-preprocess'
 import zipPack from 'vite-plugin-zip-pack'
+//@ts-ignore
 import manifest from './src/manifest'
-import postcss from './postcss.config.mjs'
+import postcss from './postcss.config.js'
 
 export default defineConfig(({ mode }) => {
   const production = mode === 'production'
@@ -31,7 +32,7 @@ export default defineConfig(({ mode }) => {
       zipPack({
         outDir: `package`,
         inDir: 'build',
-        // @ts-ignore
+        //@ts-ignore
         outFileName: `${manifest.short_name ?? manifest.name.replaceAll(' ', '-')}-extension-v${
           manifest.version
         }.zip`,

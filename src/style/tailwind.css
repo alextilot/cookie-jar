@@ -1,21 +1,3 @@
-@import './tailwind-preflight.css';
+@tailwind base;
 @tailwind utilities;
 @tailwind components;
-@tailwind base;
-
-.btn {
-  @apply font-bold py-2 px-4 rounded;
-}
-
-.btn-primary {
-  @apply bg-violet-500 text-white;
-}
-.btn-primary:hover {
-  @apply bg-violet-700;
-}
-.btn-secondary {
-  @apply bg-rose-500 text-white;
-}
-.btn-secondary:hover {
-  @apply bg-rose-700;
-}
